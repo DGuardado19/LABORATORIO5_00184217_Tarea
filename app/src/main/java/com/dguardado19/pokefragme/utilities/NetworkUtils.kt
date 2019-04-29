@@ -29,6 +29,22 @@ class NetworkUtils {
         return url
     }
 
+    fun getUrl(url : String): URL {
+        val builtUri = Uri.parse(url)
+            .buildUpon()
+            .build()
+
+        val url = try {
+            URL(builtUri.toString())
+        } catch (e: MalformedURLException) {
+            URL("")
+        }
+
+        Log.d(TAG, "Built URI $url")
+
+        return url
+    }
+
     @Throws(IOException::class)
     fun getResponseFromHttpUrl(url: URL): String {
         val urlConnection = url.openConnection() as HttpURLConnection

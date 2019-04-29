@@ -1,6 +1,8 @@
 package com.dguardado19.pokefragme
 
 
+import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -46,15 +48,25 @@ class Fragprron : Fragment() {
     }
 
     private fun portClickListener(item : PokemonOne){
-
+        var intent = Intent(viewG.context, Main2Activity::class.java)
+        intent.putExtra("Name", item.name)
+        intent.putExtra("Url", item.url)
+        startActivity(intent)
     }
 
-    private fun landClickListener(){
-
+    private fun landClickListener(item : PokemonOne){
+        var instance = Fragperron2.newIntance(item.url, item.name)
+        activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.fragment_secundario, instance)?.commit()
     }
 
     private fun initRecycler(){
-        var adapter = Adapter(listaAll, {pokemon: PokemonOne -> portClickListener(pokemon)})
+        var adapter : Adapter
+
+        if (viewG.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT){
+            adapter = Adapter(listaAll, {pokemon: PokemonOne -> portClickListener(pokemon)})
+        } else{
+            adapter = Adapter(listaAll, {pokemon: PokemonOne -> landClickListener(pokemon)})
+        }
         viewG.rv_pokemon_list.apply {
             setHasFixedSize(false)
             layoutManager = LinearLayoutManager(viewG.context)
@@ -78,6 +90,5 @@ class Fragprron : Fragment() {
             initRecycler()
         }
     }
-
 
 }
